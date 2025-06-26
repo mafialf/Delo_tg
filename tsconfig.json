@@ -21,7 +21,11 @@
     "paths": {
       "@/*": ["./*"]
     },
-    "types": ["vite/client", "node_modules/@supabase/supabase-js"]
+    "types": [
+      "vite/client",
+      "node_modules/@supabase/supabase-js",
+      "types/telegram.type"  // Типизация для Telegram Web App API
+    ]
   },
   "include": [
     "next-env.d.ts",
