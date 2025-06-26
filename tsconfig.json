@@ -24,7 +24,7 @@
     "types": [
       "vite/client",
       "node_modules/@supabase/supabase-js",
-      "types/telegram.type"  // Типизация для Telegram Web App API
+      "types/telegram.type"
     ]
   },
   "include": [
