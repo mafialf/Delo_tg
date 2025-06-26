@@ -8,22 +8,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Метод не поддерживается' });
   }
 
-  const { id } = req.body;
-  const telegramUsername = window.Telegram.WebApp.initDataUnsafe.user.username;
+  const { id, telegramId } = req.body;
 
   try {
+    // Проверяем запись
+    const { data: appointment, error: fetchError } = await supabase
+      .from('appointments')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (fetchError || !appointment) {
+      return res.status(404).json({ error: 'Запись не найдена' });
+    }
+
+    // Проверяем, принадлежит ли запись этому пользователю
+    if (appointment.client_telegram_id !== parseInt(telegramId, 10)) {
+      return res.status(403).json({ error: 'Нет прав на отклонение этой записи' });
+    }
+
+    // Удаляем запись
     const { error } = await supabase
       .from('appointments')
       .delete()
-      .eq('id', id)
-      .eq('master_telegram_username', telegramUsername);
+      .eq('id', id);
 
     if (error) {
       return res.status(500).json({ error: error.message });
     }
 
-    res.status(200).json({ message: 'Запись отклонена.' });
+    res.status(200).json({ message: 'Запись удалена.' });
   } catch (err) {
-    res.status(500).json({ error: 'Ошибка отклонения записи' });
+    console.error(err);
+    res.status(500).json({ error: 'Произошла ошибка при обработке запроса' });
   }
 }
