@@ -17,6 +17,7 @@ const Page10: React.FC = () => {
   };
 
   const submitSlots = async () => {
+    // Получаем username мастера из Telegram
     const telegramUsername = window.Telegram?.WebApp?.initDataUnsafe?.user?.username;
 
     if (!telegramUsername) {
