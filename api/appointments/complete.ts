@@ -1,4 +1,4 @@
-// api/appointments/complete.ts
+// pages/api/appointments/complete.ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '../../utils/supabaseClient';
@@ -8,30 +8,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Метод не поддерживается' });
   }
 
-  const { id } = req.body;
+  const { id, telegramId } = req.body;
 
   try {
-    // Получаем ID пользователя из Telegram
-    const telegramId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || null;
+    // Проверяем, существует ли запись с этим ID
+    const { data: appointment, error: fetchError } = await supabase
+      .from('appointments')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-    if (!telegramId) {
-      return res.status(401).json({ error: 'Пользователь не авторизован' });
+    if (fetchError || !appointment) {
+      return res.status(404).json({ error: 'Запись не найдена' });
+    }
+
+    // Проверяем, принадлежит ли запись этому пользователю
+    if (appointment.client_telegram_id !== parseInt(telegramId, 10)) {
+      return res.status(403).json({ error: 'Нет прав на завершение этой записи' });
     }
 
     // Обновляем статус записи
     const { error } = await supabase
       .from('appointments')
       .update({ status: 'выполнено' })
-      .eq('id', id)
-      .eq('client_telegram_id', telegramId);
+      .eq('id', id);
 
     if (error) {
       return res.status(500).json({ error: error.message });
     }
 
-    res.status(200).json({ message: 'Запись завершена.' });
+    res.status(200).json({ message: 'Запись успешно завершена.' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Произошла ошибка при завершении записи' });
+    res.status(500).json({ error: 'Произошла ошибка при обработке запроса' });
   }
 }
