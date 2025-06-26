@@ -1,3 +1,5 @@
+// pages/page10.tsx
+
 'use client';
 
 import React, { useState } from 'react';
@@ -15,7 +17,12 @@ const Page10: React.FC = () => {
   };
 
   const submitSlots = async () => {
-    const username = window.Telegram.WebApp.initDataUnsafe.user.username;
+    const telegramUsername = window.Telegram?.WebApp?.initDataUnsafe?.user?.username;
+
+    if (!telegramUsername) {
+      alert('Вы должны быть авторизованы.');
+      return;
+    }
 
     for (const slot of slots) {
       const response = await fetch('/api/appointments/add', {
@@ -24,7 +31,7 @@ const Page10: React.FC = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          master_telegram_username: username,
+          master_telegram_username: telegramUsername,
           date: slot.date,
           time: slot.time
         })
