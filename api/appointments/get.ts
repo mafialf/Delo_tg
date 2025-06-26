@@ -4,13 +4,15 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '../../utils/supabaseClient';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const telegramId = window.Telegram.WebApp.initDataUnsafe.user.id;
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Метод не поддерживается' });
+  }
 
   try {
+    // Получаем все записи
     const { data, error } = await supabase
       .from('appointments')
-      .select('*')
-      .or(`client_telegram_id.eq.${telegramId},master_telegram_username.eq.@${window.Telegram.WebApp.initDataUnsafe.user.username}`);
+      .select('*');
 
     if (error) {
       return res.status(500).json({ error: error.message });
@@ -18,6 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     res.status(200).json(data);
   } catch (err) {
-    res.status(500).json({ error: 'Произошла ошибка' });
+    console.error(err);
+    res.status(500).json({ error: 'Произошла ошибка при получении записей' });
   }
 }
