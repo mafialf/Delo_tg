@@ -10,13 +10,13 @@ declare namespace window {
         };
       };
       openLink: (url: string) => void;
+      close: () => void;
       backButton: {
         show: () => void;
         hide: () => void;
         onClick: (callback: () => void) => void;
         offClick: (callback: () => void) => void;
       };
-      close: () => void;
     };
   };
 }
