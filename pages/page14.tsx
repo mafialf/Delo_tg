@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-// Типизация для логов действий админа
+// Типизация данных, получаемых из Supabase
 interface AdminLog {
-  id: number;
+  id?: number;
   action: 'approve' | 'reject';
   admin_telegram_id: string;
   master_telegram_username: string;
@@ -30,7 +30,7 @@ const Page14 = () => {
 
         // Проверяем, что данные — массив
         if (Array.isArray(data)) {
-          // Приводим к нужному типу
+          // Приводим к нужному типу и фильтруем пустые значения
           const typedData = data.map((item: any): AdminLog => ({
             id: item.id || 0,
             action: item.action || 'reject',
@@ -87,7 +87,7 @@ const Page14 = () => {
               </tr>
             ) : (
               logs.map((log) => (
-                <tr key={log.id} className="border-b border-gray-700 hover:bg-gray-700 transition-colors">
+                <tr key={log.id || log.created_at} className="border-b border-gray-700 hover:bg-gray-700 transition-colors">
                   <td className="p-3">
                     <span className={`px-2 py-1 inline-block rounded text-sm ${
                       log.action === 'approve'
