@@ -1,61 +1,55 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 
-const Page11: React.FC = () => {
+export default function App() {
   const [slots, setSlots] = useState([]);
-  const router = useRouter();
-  const telegramUsername = router.query.master as string;
+  const [masterUsername, setMasterUsername] = useState('ivan_ivanov'); // Example username
 
+  // Mock data fetching - in a real app you'd fetch this from an API
   useEffect(() => {
     const fetchAvailableSlots = async () => {
-      const response = await fetch('/api/appointments/get', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ master_telegram_username: telegramUsername })
-      });
-
-      if (!response.ok) {
+      try {
+        // In a real app, you would make an API call here
+        const mockData = [
+          {
+            id: 1,
+            date: "2025-05-15",
+            time: "14:00"
+          },
+          {
+            id: 2,
+            date: "2025-05-16",
+            time: "10:30"
+          }
+        ];
+        
+        setSlots(mockData);
+      } catch (error) {
         alert('Ошибка получения свободных слотов.');
-        return;
+        console.error(error);
       }
-
-      const data = await response.json();
-      setSlots(data);
     };
 
     fetchAvailableSlots();
-  }, [telegramUsername]);
+  }, []);
 
-  const selectTime = async (id: string) => {
-    const telegramId = window.Telegram.WebApp.initDataUnsafe.user.id;
-
-    const response = await fetch('/api/appointments/select', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        id,
-        client_telegram_id: telegramId
-      })
-    });
-
-    if (!response.ok) {
-      alert('Ошибка выбора времени.');
-      return;
+  const selectTime = async (id) => {
+    // In a real app, you would send the selection to your backend
+    // Here we just simulate success
+    try {
+      alert("Вы успешно записались на выбранное время!");
+      window.location.href = "#/page5"; // Redirect to bookings page
+    } catch (error) {
+      alert("Ошибка выбора времени.");
+      console.error(error);
     }
-
-    window.Telegram.WebApp.close();
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans p-6">
       <button
-        onClick={() => router.back()}
+        onClick={() => window.history.back()}
         className="absolute top-4 left-4 p-2 rounded-full bg-gray-700 text-white hover:bg-gray-600 transition-colors"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -107,6 +101,6 @@ const Page11: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Page11;
