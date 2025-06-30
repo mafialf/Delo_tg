@@ -4,7 +4,7 @@
 
 import React, { useState } from 'react';
 
-export default function App() {
+function App() {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [slots, setSlots] = useState([]);
