@@ -1,77 +1,50 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 
-const Page9: React.FC = () => {
+export default function App() {
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
   const [locationType, setLocationType] = useState('');
-  const [services, setServices] = useState<string[]>([]);
+  const [services, setServices] = useState([]); // Убрана типизация <string[]>
   const [experience, setExperience] = useState('');
-  const [telegramUsername, setTelegramUsername] = useState('');
+  const [telegramUsername, setTelegramUsername] = useState('@ivanpetrov');
   const [aboutMe, setAboutMe] = useState('');
 
-  const router = useRouter();
-
+  // Mock user data - in a real app this would come from auth context or local storage
   useEffect(() => {
-    const username = window.Telegram.WebApp.initDataUnsafe.user.username;
-
-    const fetchMaster = async () => {
-      const response = await fetch('/api/masters/get', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ telegram_username: username })
-      });
-
-      if (!response.ok) return;
-
-      const data = await response.json();
-      if (data) {
-        setName(data.name);
-        setCity(data.city);
-        setLocationType(data.location_type);
-        setServices(data.services);
-        setExperience(data.experience);
-        setTelegramUsername(data.telegram_username);
-        setAboutMe(data.about_me || '');
-      }
+    // Simulate fetching master data from an API
+    const mockData = {
+      name: "Иван Иванов",
+      city: "Москва",
+      location_type: "home",
+      services: ["manicure", "eyelashes"],
+      experience: "5 лет",
+      telegram_username: "ivan_ivanov",
+      about_me: "Профессиональный мастер маникюра и наращивания ресниц"
     };
-
-    fetchMaster();
+    
+    if (mockData) {
+      setName(mockData.name);
+      setCity(mockData.city);
+      setLocationType(mockData.location_type);
+      setServices(mockData.services);
+      setExperience(mockData.experience);
+      setTelegramUsername(mockData.telegram_username);
+      setAboutMe(mockData.about_me || '');
+    }
   }, []);
 
-  const handleSubmit = async () => {
-    const response = await fetch('/api/master/edit', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name,
-        city,
-        location_type: locationType,
-        services,
-        experience,
-        about_me: aboutMe
-      })
-    });
-
-    if (!response.ok) {
-      alert('Ошибка сохранения данных.');
-      return;
-    }
-
-    alert('Данные обновлены.');
-    router.push('/page7');
+  const handleSubmit = () => {
+    // In a real app, you would send this data to an API
+    alert("Данные обновлены.");
+    window.location.href = "#/page7";
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans p-6">
       <button
-        onClick={() => router.back()}
+        onClick={() => window.history.back()}
         className="absolute top-4 left-4 p-2 rounded-full bg-gray-700 text-white hover:bg-gray-600 transition-colors"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -150,13 +123,14 @@ const Page9: React.FC = () => {
           className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
-        <input
-          type="text"
-          value={telegramUsername}
-          onChange={(e) => setTelegramUsername(e.target.value)}
-          placeholder="Telegram аккаунт"
-          className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <a
+          href={`https://t.me/ ${telegramUsername.replace('@', '')}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+        >
+          {telegramUsername}
+        </a>
 
         <textarea
           value={aboutMe}
@@ -175,6 +149,6 @@ const Page9: React.FC = () => {
       </form>
     </div>
   );
-};
+}
 
 export default Page9;
