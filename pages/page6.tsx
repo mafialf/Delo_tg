@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
 
-const Page6: React.FC = () => {
+export default function App() {
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
   const [locationType, setLocationType] = useState('');
@@ -12,32 +11,10 @@ const Page6: React.FC = () => {
   const [telegramUsername, setTelegramUsername] = useState('@ivanpetrov');
   const [aboutMe, setAboutMe] = useState('');
 
-  const router = useRouter();
-
-  const handleSubmit = async () => {
-    const response = await fetch('/api/master/apply', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name,
-        city,
-        location_type: locationType,
-        services,
-        experience,
-        telegram_username: telegramUsername,
-        about_me: aboutMe
-      })
-    });
-
-    if (!response.ok) {
-      alert("Ошибка при отправке заявки.");
-      return;
-    }
-
+  const handleSubmit = () => {
+    // In a real app, you would send this data to an API
     alert("Заявка успешно отправлена!");
-    router.push('/page7');
+    window.location.href = "#/page7";
   };
 
   return (
@@ -113,13 +90,14 @@ const Page6: React.FC = () => {
           className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
-        <input
-          type="text"
-          value={telegramUsername}
-          onChange={(e) => setTelegramUsername(e.target.value)}
-          placeholder="Telegram аккаунт"
-          className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <a
+          href={`https://t.me/ ${telegramUsername.replace('@', '')}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+        >
+          {telegramUsername}
+        </a>
 
         <textarea
           value={aboutMe}
@@ -138,6 +116,6 @@ const Page6: React.FC = () => {
       </form>
     </div>
   );
-};
+}
 
 export default Page6;
