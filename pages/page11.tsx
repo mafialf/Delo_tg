@@ -3,14 +3,15 @@
 import React, { useState, useEffect } from 'react';
 
 function Page11() {
-  const [slots, setSlots] = useState([]);
-  const [masterUsername, setMasterUsername] = useState('ivan_ivanov'); // Example username
+  // Указываем тип данных для слотов
+  const [slots, setSlots] = useState<{ id: number; date: string; time: string }[]>([]);
+  const [masterUsername, setMasterUsername] = useState('ivan_ivanov'); // Пример username
 
-  // Mock data fetching - in a real app you'd fetch this from an API
+  // Mock data fetching - в реальном приложении вы бы получали это из API
   useEffect(() => {
     const fetchAvailableSlots = async () => {
       try {
-        // In a real app, you would make an API call here
+        // В реальном приложении здесь был бы запрос к API
         const mockData = [
           {
             id: 1,
@@ -35,11 +36,10 @@ function Page11() {
   }, []);
 
   const selectTime = async (id) => {
-    // In a real app, you would send the selection to your backend
-    // Here we just simulate success
+    // В реальном приложении вы бы отправили выбор на сервер
     try {
       alert("Вы успешно записались на выбранное время!");
-      window.location.href = "#/page5"; // Redirect to bookings page
+      window.location.href = "#/page5"; // Перенаправление на страницу с записями
     } catch (error) {
       alert("Ошибка выбора времени.");
       console.error(error);
