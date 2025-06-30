@@ -2,9 +2,10 @@
 
 import React, { useRef, useEffect } from 'react';
 
-const Page13: React.FC = () => {
+export default function App() {
   const mapRef = useRef(null);
-  const telegramUsername = window.Telegram.WebApp.initDataUnsafe.user.username;
+  // Mock username for demonstration - in a real app this would come from auth context or local storage
+  const telegramUsername = 'ivan_ivanov'; 
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -22,17 +23,14 @@ const Page13: React.FC = () => {
 
       let placemark;
 
-      // Проверяем, есть ли уже сохранённые координаты
-      const { data } = await fetch('/api/master/location', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then(res => res.json());
+      // Mock data for location - in a real app you'd fetch this from an API
+      const mockLocationData = {
+        location_coords: [55.753994, 37.622093]
+      };
 
-      if (data?.location_coords) {
-        map.setCenter(data.location_coords);
-        placemark = new window['ymaps'].Placemark(data.location_coords, {
+      if (mockLocationData?.location_coords) {
+        map.setCenter(mockLocationData.location_coords);
+        placemark = new window['ymaps'].Placemark(mockLocationData.location_coords, {
           balloonContent: "Ваша локация"
         });
         map.geoObjects.add(placemark);
@@ -53,16 +51,18 @@ const Page13: React.FC = () => {
         map.geoObjects.add(placemark);
         map.setCenter(coords);
 
-        await fetch('/api/master/location', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ telegram_username: telegramUsername, location_coords: coords })
-        });
+        // In a real app, you would send the coordinates to your backend
+        console.log('Saving location:', coords);
+        
+        // Simulate saving location to server
+        alert("Локация сохранена!");
       });
     };
     document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
   }, []);
 
   return (
@@ -76,13 +76,13 @@ const Page13: React.FC = () => {
         </svg>
       </button>
 
-      <div id="map" ref={mapRef} className="w-full h-screen rounded-none overflow-hidden shadow-2xl border border-gray-600 relative"></div>
+      <div ref={mapRef} className="w-full h-screen rounded-none overflow-hidden shadow-2xl border border-gray-600 relative"></div>
 
       <div className="absolute bottom-4 left-4 text-white text-sm font-medium bg-black bg-opacity-60 px-4 py-2 rounded-lg shadow-md">
         Нажмите на карту, чтобы указать точку
       </div>
     </div>
   );
-};
+}
 
 export default Page13;
