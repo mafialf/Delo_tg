@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-export default function App() {
+function Page12() {
   const [appointments, setAppointments] = useState([]);
   const [masterUsername, setMasterUsername] = useState('ivan_ivanov'); // Example username
 
@@ -38,7 +38,7 @@ export default function App() {
     fetchAppointments();
   }, []);
 
-  const handleConfirm = async (id) => {
+  const handleConfirm = async (id: number) => {
     try {
       // In a real app, you would send the confirmation to your backend
       alert("Запись подтверждена.");
@@ -49,7 +49,7 @@ export default function App() {
     }
   };
 
-  const handleReject = async (id) => {
+  const handleReject = async (id: number) => {
     if (!window.confirm("Вы уверены, что хотите отклонить эту запись?")) return;
 
     try {
@@ -62,7 +62,7 @@ export default function App() {
     }
   };
 
-  const handleComplete = async (id) => {
+  const handleComplete = async (id: number) => {
     try {
       // In a real app, you would mark the appointment as completed
       alert("Процедура выполнена.");
