@@ -27,7 +27,23 @@ const Page14 = () => {
         }
 
         const data = await response.json();
-        setLogs(data);
+
+        // Проверяем, что данные — массив
+        if (Array.isArray(data)) {
+          // Приводим к нужному типу
+          const typedData = data.map((item: any): AdminLog => ({
+            id: item.id || 0,
+            action: item.action || 'reject',
+            admin_telegram_id: item.admin_telegram_id || '',
+            master_telegram_username: item.master_telegram_username || '',
+            created_at: item.created_at || new Date().toISOString(),
+          }));
+
+          setLogs(typedData);
+        } else {
+          console.error("Ожидался массив логов, но пришли другие данные:", data);
+          alert("Формат ответа сервера некорректный.");
+        }
       } catch (err) {
         console.error(err);
         alert('Произошла ошибка при загрузке логов.');
