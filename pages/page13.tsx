@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect } from 'react';
 
-export default function App() {
+export default function Page13() {
   const mapRef = useRef(null);
   // Mock username for demonstration - in a real app this would come from auth context or local storage
   const telegramUsername = 'ivan_ivanov'; 
@@ -83,6 +83,6 @@ export default function App() {
       </div>
     </div>
   );
-}
+};
 
 export default Page13;
