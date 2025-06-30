@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 
-const Page4: React.FC = () => {
+export default function App() {
   useEffect(() => {
     const script = document.createElement('script');
     script.src = `https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=${process.env.YANDEX_MAPS_API_KEY}`;
@@ -16,27 +16,42 @@ const Page4: React.FC = () => {
           controls: ['zoomControl'],
         });
 
-        fetch('/api/masters/get')
-          .then(res => res.json())
-          .then(masters => {
-            masters.forEach(master => {
-              const placemark = new window['ymaps'].Placemark(master.location_coords, {
-                balloonContentHeader: master.name,
-                balloonContentBody: `<a href="/page8?master=${master.telegram_username}" target="_blank">Посмотреть профиль</a>`,
-              }, {
-                iconLayout: 'default#imageWithContent', 
-                iconImageHref: '/marker.png',
-                iconImageSize: [40, 40],
-                iconImageOffset: [-20, -40]
-              });
+        // Mock data for masters (since we don't have real API)
+        const mockMasters = [
+          {
+            id: 1,
+            name: "Иван Иванов",
+            location_coords: [55.753994, 37.622093],
+            telegram_username: "ivan_ivanov"
+          },
+          {
+            id: 2,
+            name: "Мария Петрова",
+            location_coords: [55.75, 37.63],
+            telegram_username: "masha_petrova"
+          }
+        ];
 
-              map.geoObjects.add(placemark);
-            });
-          })
-          .catch(err => console.error('Ошибка загрузки мастеров:', err));
+        mockMasters.forEach(master => {
+          const placemark = new window['ymaps'].Placemark(master.location_coords, {
+            balloonContentHeader: master.name,
+            balloonContentBody: `<a href=" https://t.me/ ${master.telegram_username}" target="_blank" rel="noopener noreferrer">Посмотреть профиль</a>`,
+          }, {
+            iconLayout: 'default#imageWithContent', 
+            iconImageHref: '/marker.png',
+            iconImageSize: [40, 40],
+            iconImageOffset: [-20, -40]
+          });
+
+          map.geoObjects.add(placemark);
+        });
       });
     };
     document.head.appendChild(script);
+    
+    return () => {
+      document.head.removeChild(script);
+    };
   }, []);
 
   return (
@@ -57,6 +72,6 @@ const Page4: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Page4;
