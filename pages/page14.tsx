@@ -1,5 +1,6 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 
 // Типизация данных, получаемых из Supabase
 interface AdminLog {
@@ -10,11 +11,9 @@ interface AdminLog {
   created_at: string;
 }
 
-const Page14 = () => {
+export default function Page() {
   const [logs, setLogs] = useState<AdminLog[]>([]);
-  const router = useRouter();
 
-  // Получение логов действий админа
   useEffect(() => {
     const fetchAdminActions = async () => {
       try {
@@ -28,9 +27,7 @@ const Page14 = () => {
 
         const data = await response.json();
 
-        // Проверяем, что данные — массив
         if (Array.isArray(data)) {
-          // Приводим к нужному типу и фильтруем пустые значения
           const typedData = data.map((item: any): AdminLog => ({
             id: item.id || 0,
             action: item.action || 'reject',
@@ -129,5 +126,3 @@ const Page14 = () => {
     </div>
   );
 };
-
-export default Page14;
