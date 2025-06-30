@@ -35,7 +35,7 @@ function Page11() {
     fetchAvailableSlots();
   }, []);
 
-  const selectTime = async (id) => {
+  const selectTime = async (id: number) => {
     // В реальном приложении вы бы отправили выбор на сервер
     try {
       alert("Вы успешно записались на выбранное время!");
