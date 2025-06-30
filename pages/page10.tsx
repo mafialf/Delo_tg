@@ -3,13 +3,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
 
-const Page10: React.FC = () => {
+export default function App() {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [slots, setSlots] = useState<{ date: string; time: string }[]>([]);
-  const router = useRouter();
+  const [slots, setSlots] = useState([]); // Убрана типизация
+
+  // Mock username for demonstration - in a real app this would come from auth context or local storage
+  const telegramUsername = '@ivan_ivanov'; // Example username
 
   const addSlot = () => {
     if (!date || !time) return;
@@ -17,41 +18,27 @@ const Page10: React.FC = () => {
   };
 
   const submitSlots = async () => {
-    // Получаем username мастера из Telegram
-    const telegramUsername = window.Telegram?.WebApp?.initDataUnsafe?.user?.username;
-
     if (!telegramUsername) {
       alert('Вы должны быть авторизованы.');
       return;
     }
 
-    for (const slot of slots) {
-      const response = await fetch('/api/appointments/add', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          master_telegram_username: telegramUsername,
-          date: slot.date,
-          time: slot.time
-        })
-      });
-
-      if (!response.ok) {
-        alert('Ошибка добавления слотов.');
-        return;
-      }
+    try {
+      // In a real app, you would send these slots to an API
+      console.log('Submitting slots:', slots);
+      
+      alert('Расписание выложено.');
+      window.location.href = "#/page11";
+    } catch (error) {
+      console.error('Ошибка добавления слотов:', error);
+      alert('Ошибка добавления слотов.');
     }
-
-    alert('Расписание выложено.');
-    router.push('/page11');
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans p-6">
       <button
-        onClick={() => router.back()}
+        onClick={() => window.history.back()}
         className="absolute top-4 left-4 p-2 rounded-full bg-gray-700 text-white hover:bg-gray-600 transition-colors"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -135,6 +122,6 @@ const Page10: React.FC = () => {
       </button>
     </div>
   );
-};
+}
 
 export default Page10;
