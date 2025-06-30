@@ -2,6 +2,11 @@
 
 import React, { useRef, useEffect } from 'react';
 
+// Определяем интерфейс для структуры данных
+interface LocationData {
+  location_coords?: [number, number]; // Необязательное поле с координатами
+}
+
 export default function Page13() {
   const mapRef = useRef(null);
   const telegramUsername = 'ivan_ivanov'; 
@@ -22,12 +27,13 @@ export default function Page13() {
 
       let placemark;
 
-      const mockLocationData = {
+      // Используем типизированный объект
+      const mockLocationData: LocationData = {
         location_coords: [55.753994, 37.622093]
       };
 
       if (mockLocationData?.location_coords) {
-        map.setCenter(mockLocationData.location_coords);
+        map.setCenter(mockLocationData.location_coords); // Теперь всё понятно TypeScript
         placemark = new window['ymaps'].Placemark(mockLocationData.location_coords, {
           balloonContent: "Ваша локация"
         });
