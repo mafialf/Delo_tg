@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-export default function App() {
+function Page11() {
   const [slots, setSlots] = useState([]);
   const [masterUsername, setMasterUsername] = useState('ivan_ivanov'); // Example username
 
@@ -101,6 +101,6 @@ export default function App() {
       </div>
     </div>
   );
-}
+};
 
 export default Page11;
