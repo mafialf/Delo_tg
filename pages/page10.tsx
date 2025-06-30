@@ -112,6 +112,6 @@ function App() {
       </button>
     </div>
   );
-}
+};
 
 export default Page10;
