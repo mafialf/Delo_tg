@@ -2,8 +2,18 @@
 
 import React, { useState, useEffect } from 'react';
 
+// Определяем тип данных для записи
+interface Appointment {
+  id: number;
+  date: string;
+  time: string;
+  client_telegram_id: string;
+  status: 'ожидание подтверждения' | 'подтверждено' | 'выполнено';
+}
+
 function Page12() {
-  const [appointments, setAppointments] = useState([]);
+  // Используем типизацию для состояния
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [masterUsername, setMasterUsername] = useState('ivan_ivanov'); // Example username
 
   // Mock data fetching - in a real app you'd fetch this from an API
@@ -11,7 +21,7 @@ function Page12() {
     const fetchAppointments = async () => {
       try {
         // In a real app, you would make an API call here
-        const mockData = [
+        const mockData: Appointment[] = [
           {
             id: 1,
             date: "2025-05-15",
