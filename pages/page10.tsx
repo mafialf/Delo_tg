@@ -4,7 +4,7 @@
 
 import React, { useState } from 'react';
 
-function App() {
+function Page10() {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [slots, setSlots] = useState<{ date: string; time: string }[]>([]);
