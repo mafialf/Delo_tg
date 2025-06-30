@@ -1,93 +1,82 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 
-const Page12: React.FC = () => {
+export default function App() {
   const [appointments, setAppointments] = useState([]);
-  const telegramUsername = window.Telegram.WebApp.initDataUnsafe.user.username;
-  const router = useRouter();
+  const [masterUsername, setMasterUsername] = useState('ivan_ivanov'); // Example username
 
+  // Mock data fetching - in a real app you'd fetch this from an API
   useEffect(() => {
     const fetchAppointments = async () => {
-      const response = await fetch('/api/appointments/master', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ master_telegram_username: telegramUsername })
-      });
-
-      if (!response.ok) {
+      try {
+        // In a real app, you would make an API call here
+        const mockData = [
+          {
+            id: 1,
+            date: "2025-05-15",
+            time: "14:00",
+            client_telegram_id: "123456",
+            status: "ожидание подтверждения"
+          },
+          {
+            id: 2,
+            date: "2025-05-16",
+            time: "10:30",
+            client_telegram_id: "789012",
+            status: "подтверждено"
+          }
+        ];
+        
+        setAppointments(mockData);
+      } catch (error) {
         alert('Ошибка получения записей.');
-        return;
+        console.error(error);
       }
-
-      const data = await response.json();
-      setAppointments(data);
     };
 
     fetchAppointments();
   }, []);
 
-  const handleConfirm = async (id: string) => {
-    const response = await fetch('/api/appointments/confirm', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ id })
-    });
-
-    if (!response.ok) {
-      alert('Ошибка подтверждения.');
-      return;
+  const handleConfirm = async (id) => {
+    try {
+      // In a real app, you would send the confirmation to your backend
+      alert("Запись подтверждена.");
+      window.location.reload();
+    } catch (error) {
+      alert("Ошибка подтверждения.");
+      console.error(error);
     }
-
-    alert('Запись подтверждена.');
-    window.location.reload();
   };
 
-  const handleReject = async (id: string) => {
-    const response = await fetch('/api/appointments/reject', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ id })
-    });
+  const handleReject = async (id) => {
+    if (!window.confirm("Вы уверены, что хотите отклонить эту запись?")) return;
 
-    if (!response.ok) {
-      alert('Ошибка удаления.');
-      return;
+    try {
+      // In a real app, you would send the rejection to your backend
+      alert("Запись удалена.");
+      window.location.reload();
+    } catch (error) {
+      alert("Ошибка удаления.");
+      console.error(error);
     }
-
-    alert('Запись удалена.');
-    window.location.reload();
   };
 
-  const handleComplete = async (id: string) => {
-    const response = await fetch('/api/appointments/complete', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ id })
-    });
-
-    if (!response.ok) {
-      alert('Ошибка завершения.');
-      return;
+  const handleComplete = async (id) => {
+    try {
+      // In a real app, you would mark the appointment as completed
+      alert("Процедура выполнена.");
+      window.location.reload();
+    } catch (error) {
+      alert("Ошибка завершения.");
+      console.error(error);
     }
-
-    alert('Процедура выполнена.');
-    window.location.reload();
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans p-6">
       <button
-        onClick={() => router.back()}
+        onClick={() => window.history.back()}
         className="absolute top-4 left-4 p-2 rounded-full bg-gray-700 text-white hover:bg-gray-600 transition-colors"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -127,7 +116,9 @@ const Page12: React.FC = () => {
                   </td>
                   <td className="p-3">
                     <a
-                      href={`https://t.me${appointment.client_telegram_id}`} 
+                      href={`https://t.me/ ${appointment.client_telegram_id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-blue-300 hover:text-blue-200 underline"
                     >
                       #{appointment.client_telegram_id}
@@ -182,6 +173,6 @@ const Page12: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Page12;
