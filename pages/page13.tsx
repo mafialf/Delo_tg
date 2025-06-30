@@ -83,6 +83,4 @@ export default function Page13() {
       </div>
     </div>
   );
-};
-
-export default Page13;
+}
