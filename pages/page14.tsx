@@ -1,22 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-const Page14: React.FC = () => {
-  const [logs, setLogs] = useState([]);
+// Типизация для логов действий админа
+interface AdminLog {
+  id: number;
+  action: 'approve' | 'reject';
+  admin_telegram_id: string;
+  master_telegram_username: string;
+  created_at: string;
+}
+
+const Page14 = () => {
+  const [logs, setLogs] = useState<AdminLog[]>([]);
   const router = useRouter();
 
+  // Получение логов действий админа
   useEffect(() => {
     const fetchAdminActions = async () => {
       try {
-        const { data, error } = await fetch('/api/admin/logs', {
+        const response = await fetch('/api/admin/logs', {
           method: 'GET',
-        }).then(res => res.json());
+        });
 
-        if (error) {
-          alert('Ошибка получения логов.');
-          return;
+        if (!response.ok) {
+          throw new Error('Ошибка получения логов.');
         }
 
+        const data = await response.json();
         setLogs(data);
       } catch (err) {
         console.error(err);
@@ -73,7 +83,9 @@ const Page14: React.FC = () => {
                   </td>
                   <td className="p-3">
                     <a
-                      href={`https://t.me ${log.admin_telegram_id}`}
+                      href={`https://t.me/ ${log.admin_telegram_id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-blue-300 hover:text-blue-200 underline"
                     >
                       #{log.admin_telegram_id}
@@ -81,7 +93,9 @@ const Page14: React.FC = () => {
                   </td>
                   <td className="p-3">
                     <a
-                      href={`https://t.me ${log.master_telegram_username}`}
+                      href={`https://t.me/ ${log.master_telegram_username}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-blue-300 hover:text-blue-200 underline"
                     >
                       {log.master_telegram_username}
