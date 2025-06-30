@@ -4,7 +4,6 @@ import React, { useRef, useEffect } from 'react';
 
 export default function Page13() {
   const mapRef = useRef(null);
-  // Mock username for demonstration - in a real app this would come from auth context or local storage
   const telegramUsername = 'ivan_ivanov'; 
 
   useEffect(() => {
@@ -23,7 +22,6 @@ export default function Page13() {
 
       let placemark;
 
-      // Mock data for location - in a real app you'd fetch this from an API
       const mockLocationData = {
         location_coords: [55.753994, 37.622093]
       };
@@ -37,7 +35,7 @@ export default function Page13() {
         return;
       }
 
-      map.events.add('click', async (e) => {
+      map.events.add('click', async (e: any) => {
         const coords = e.get('coords');
 
         if (placemark) {
@@ -51,10 +49,8 @@ export default function Page13() {
         map.geoObjects.add(placemark);
         map.setCenter(coords);
 
-        // In a real app, you would send the coordinates to your backend
         console.log('Saving location:', coords);
         
-        // Simulate saving location to server
         alert("Локация сохранена!");
       });
     };
