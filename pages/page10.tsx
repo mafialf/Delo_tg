@@ -4,18 +4,16 @@
 
 import React, { useState } from 'react';
 
-export default function App() {
+function Page10() {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [slots, setSlots] = useState<{ date: string; time: string }[]>([]);
 
-  // Добавление слота
   const addSlot = () => {
     if (!date || !time) return;
     setSlots([...slots, { date, time }]);
   };
 
-  // Отправка расписания
   const submitSlots = async () => {
     try {
       console.log('Submitting slots:', slots);
@@ -29,7 +27,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans p-6">
-      {/* Кнопка "Назад" */}
       <button
         onClick={() => window.history.back()}
         className="absolute top-4 left-4 p-2 rounded-full bg-gray-700 text-white hover:bg-gray-600 transition-colors"
@@ -39,12 +36,10 @@ export default function App() {
         </svg>
       </button>
 
-      {/* Заголовок страницы */}
       <h1 className="text-4xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
         Выложить расписание
       </h1>
 
-      {/* Поле выбора даты */}
       <div className="w-full max-w-md mb-6">
         <label htmlFor="date" className="block text-sm font-medium mb-1">Выберите дату</label>
         <input
@@ -56,7 +51,6 @@ export default function App() {
         />
       </div>
 
-      {/* Поле выбора времени */}
       <div className="w-full max-w-md mb-6">
         <label htmlFor="time" className="block text-sm font-medium mb-1">Выберите время</label>
         <input
@@ -68,7 +62,6 @@ export default function App() {
         />
       </div>
 
-      {/* Кнопка добавления записи */}
       <button
         onClick={addSlot}
         disabled={!date || !time}
@@ -77,7 +70,6 @@ export default function App() {
         Добавить запись
       </button>
 
-      {/* Таблица с расписанием */}
       <div className="mt-8 w-full max-w-2xl overflow-x-auto">
         <table className="w-full table-auto bg-gray-800 bg-opacity-60 rounded-lg shadow-md">
           <thead>
@@ -112,7 +104,6 @@ export default function App() {
         </table>
       </div>
 
-      {/* Кнопка сохранения расписания */}
       <button
         onClick={submitSlots}
         className="mt-8 w-full px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-lg shadow-lg transform transition-all duration-300 hover:shadow-xl hover:translate-y-[-4px] active:translate-y-[0px] active:shadow-md focus:outline-none"
@@ -122,4 +113,5 @@ export default function App() {
     </div>
   );
 }
+
 export default Page10;
