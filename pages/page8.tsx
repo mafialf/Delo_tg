@@ -1,38 +1,40 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 
-const Page8: React.FC = () => {
+export default function App() {
   const [master, setMaster] = useState(null);
-  const router = useRouter();
+  const [username, setUsername] = useState('ivan_ivanov');
 
+  // Mock data for demonstration purposes
   useEffect(() => {
     const fetchMaster = async () => {
-      const response = await fetch('/api/masters/get', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ telegram_username: router.query.master })
-      });
-
-      if (!response.ok) {
+      try {
+        // In a real app, you would make an API call here
+        const mockData = {
+          name: "Иван Иванов",
+          city: "Москва",
+          location_type: "На дому",
+          services: ["мангикир", "наращивание ресниц", "эпиляция"],
+          experience: "5 лет",
+          telegram_username: "ivan_ivanov",
+          address: "ул. Ленина, д.1"
+        };
+        
+        setMaster(mockData);
+      } catch (error) {
         alert('Мастер не найден.');
-        return;
+        console.error(error);
       }
-
-      const data = await response.json();
-      setMaster(data);
     };
 
     fetchMaster();
-  }, [router.query]);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-gradient-to-b from-gray-700 to-gray-500 text-white font-sans p-6">
       <button
-        onClick={() => router.back()}
+        onClick={() => window.history.back()}
         className="absolute top-4 left-4 p-2 rounded-full bg-gray-700 text-white hover:bg-gray-600 transition-colors"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -69,7 +71,9 @@ const Page8: React.FC = () => {
           <div className="flex justify-between">
             <span>Telegram:</span>
             <a
-              href={`https://t.me${master.telegram_username}`} 
+              href={`https://t.me/ ${master.telegram_username}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-blue-300 hover:text-blue-200 underline"
             >
               {master.telegram_username}
@@ -78,7 +82,7 @@ const Page8: React.FC = () => {
           <div className="flex justify-between mt-4">
             <span>Адрес:</span>
             <a
-              href="/page4"
+              href="#/page4"
               className="text-blue-300 hover:text-blue-200 underline"
             >
               Посмотреть на карте
@@ -88,13 +92,13 @@ const Page8: React.FC = () => {
       )}
 
       <button
-        onClick={() => router.push(`/page11?master=${router.query.master}`)}
+        onClick={() => window.location.href = `#/page11?master=${username}`}
         className="mt-auto w-full max-w-md px-8 py-6 mt-10 text-xl font-semibold rounded-lg shadow-lg transform transition-all duration-300 hover:shadow-xl hover:translate-y-[-4px] active:translate-y-[0px] active:shadow-md focus:outline-none bg-gradient-to-r from-green-500 to-teal-600 text-white"
       >
         Записаться
       </button>
     </div>
   );
-};
+}
 
 export default Page8;
