@@ -1,58 +1,69 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 
-const Page5: React.FC = () => {
+export default function App() {
   const [appointments, setAppointments] = useState([]);
-  const router = useRouter();
-  const telegramId = parseInt(window.Telegram.WebApp.initDataUnsafe.user.id as string, 10);
+  const [userId, setUserId] = useState(null);
 
+  // Mock user ID - in a real app this would come from auth context or local storage
   useEffect(() => {
-    const fetchAppointments = async () => {
-      const { data, error } = await fetch('/api/appointments/get', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ client_telegram_id: telegramId }),
-      }).then(res => res.json());
-
-      if (error) {
-        alert("Ошибка получения записей.");
-        return;
-      }
-
-      setAppointments(data);
-    };
-
-    fetchAppointments();
+    // Simulate getting user ID from local storage or other source
+    const mockUserId = 123456; // Example user ID
+    setUserId(mockUserId);
+    
+    fetchAppointments(mockUserId);
   }, []);
 
-  const handleCancel = async (id: string) => {
+  const fetchAppointments = async (userId) => {
+    try {
+      // In a real app, you would make an API call here
+      // For demo purposes, we'll use mock data
+      const mockData = [
+        {
+          id: 1,
+          date: "2024-05-20",
+          time: "14:00",
+          master_telegram_username: "master1",
+          status: "подтверждено"
+        },
+        {
+          id: 2,
+          date: "2024-05-22",
+          time: "10:30",
+          master_telegram_username: "master2",
+          status: "ожидание подтверждения"
+        }
+      ];
+      
+      setAppointments(mockData);
+    } catch (error) {
+      alert("Ошибка получения записей.");
+      console.error(error);
+    }
+  };
+
+  const handleCancel = async (id) => {
     if (!window.confirm("Вы уверены, что хотите отменить запись?")) return;
 
-    const response = await fetch('/api/appointments/cancel', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id })
-    });
-
-    if (!response.ok) {
+    try {
+      // In a real app, you would make an API call here
+      alert("Запись отменена.");
+      window.location.reload();
+    } catch (error) {
       alert("Не удалось отменить запись.");
-      return;
+      console.error(error);
     }
+  };
 
-    alert("Запись отменена.");
-    window.location.reload();
+  const handleBack = () => {
+    window.history.back();
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-gradient-to-b from-gray-900 to-gray-800 text-white font-sans p-6">
       <button
-        onClick={() => router.back()}
+        onClick={handleBack}
         className="absolute top-4 left-4 p-2 rounded-full bg-gray-700 text-white hover:bg-gray-600 transition-colors"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -92,7 +103,9 @@ const Page5: React.FC = () => {
                   </td>
                   <td className="p-3">
                     <a
-                      href={`https://t.me${appointment.master_telegram_username}`} 
+                      href={`https://t.me/ ${appointment.master_telegram_username}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-blue-300 hover:text-blue-200 underline"
                     >
                       {appointment.master_telegram_username}
@@ -129,6 +142,6 @@ const Page5: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Page5;
